@@ -1,9 +1,14 @@
 # OCCMN 个人博客
 
-OCCMN 是一个个人的博客系统，整个 OCCMN 项目由三个子项目组成，分别是：
-__【 博客主站 OCCMN-WEB 】__  
-__【 接口站点 OCCMN-API 】__  
-__【 管理后台 OCCMN-ADMIN 】__  
+### 一、项目介绍
+OCCMN 是一个个人的博客系统，整个 OCCMN 项目由三个子项目组成，分别是  
+
+1. 博客主站 OCCMN-WEB  
+
+2. 接口站点 OCCMN-API  
+
+3. 管理后台 OCCMN-ADMIN  
+
 而当前项目 OCCMN-ADMIN 就是这个博客系统的管理后台部分。
 
 <br/>
