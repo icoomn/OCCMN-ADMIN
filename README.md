@@ -1,18 +1,14 @@
-# Vue 3 + TypeScript + Vite
+# OCCMN 个人博客
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+`OCCMN` 是一个个人的博客系统，整个 `OCCMN` 项目由三个子项目组成，分别是：__【 博客主站 OCCMN-WEB 】__，__【 API 接口站点 OCCMN-API 】__，__【 管理后台 OCCMN-ADMIN 】__，而当前项目 `OCCMN-ADMIN` 就是这个博客系统的管理后台部分。
 
-## Recommended IDE Setup
+#### 项目开发环境
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+Vue3 + Vite + TypeScript + PNPM + ElementPlus + Pinia + Axios
 
-## Type Support For `.vue` Imports in TS
+#### 项目开发教程
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+此项目是我的个人开源项目，项目完成之后，我会录制整个项目的搭建和开发教程，以此来帮助大家快速入门 `VUE3` 项目的开发，及熟悉 `VUE3` 周边生态在项目中的使用。
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+#### 项目部分页面截图
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
