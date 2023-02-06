@@ -1,0 +1,26 @@
+/* 浏览器默认样式重置 */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* 搜索框公共样式 */
+.search {
+    display: flex;
+    justify-content: space-between;
+    border: 1px dashed #eee;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+.search__left {
+    display: flex;
+}
+.search__left-item {
+    margin-right: 10px;
+}
+
+/* Element表格公共样式 */
+.el-table .danger-row {
+    --el-table-tr-bg-color: var(--el-color-danger-light-9);
+}
