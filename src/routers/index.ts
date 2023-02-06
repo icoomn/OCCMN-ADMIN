@@ -1,40 +1,62 @@
 import { createRouter, createWebHistory  } from 'vue-router'
 import Home from '../pages/home/home.vue'
+import Login from '@/pages/login/login.vue'
 const routes = [
+    {
+        path: '/login',
+        name: 'login',
+        component: Login
+    },
     {
         path: '/',
         name: 'Home',
-        component: Home
+        component: Home,
+        children: [
+            {
+                path: '/dashboard',
+                name: 'dashboard',
+                component: () => import('../pages/dashboard/dashboard.vue')
+            },
+            {
+                path: '/account/list',
+                name: 'accountList',
+                component: () => import('../pages/account/list.vue')
+            },
+            {
+                path: '/article/list',
+                name: 'articleList',
+                component: () => import('../pages/article/list.vue')
+            },
+            {
+                path: '/article/comment',
+                name: 'articleComment',
+                component: () => import('../pages/article/comment.vue')
+            },
+            {
+                path: '/article/add',
+                name: 'articleAdd',
+                component: () => import('../pages/article/add.vue')
+            },
+            {
+                path: '/product/list',
+                name: 'productList',
+                component: () => import('../pages/product/list.vue')
+            },
+            {
+                path: '/category/list',
+                name: 'categoryList',
+                component: () => import('../pages/category/list.vue')
+            },
+            {
+                path: '/404',
+                name: 'none',
+                component: () => import('../pages/none/none.vue')
+            }
+        ]
     },
     {
-        path: '/account/list',
-        name: 'accountList',
-        component: () => import('../pages/account/list.vue')
-    },
-    {
-        path: '/article/list',
-        name: 'articleList',
-        component: () => import('../pages/article/list.vue')
-    },
-    {
-        path: '/article/comment',
-        name: 'articleComment',
-        component: () => import('../pages/article/comment.vue')
-    },
-    {
-        path: '/article/add',
-        name: 'articleAdd',
-        component: () => import('../pages/article/add.vue')
-    },
-    {
-        path: '/product/list',
-        name: 'productList',
-        component: () => import('../pages/product/list.vue')
-    },
-    {
-        path: '/category/list',
-        name: 'categoryList',
-        component: () => import('../pages/category/list.vue')
+        path: '/:pathMatch(.*)',
+        redirect: { path: '/404' }
     }
 ]
 export default createRouter({
