@@ -12,7 +12,7 @@
                     </div>
                     <div class="header__tool">
                         <span @click="router.back()"><el-icon><ArrowLeft /></el-icon>&nbsp;返回</span>
-                        <span><el-icon><FullScreen /></el-icon>&nbsp;全屏</span>
+                        <span @click="fullScreen"><el-icon><FullScreen /></el-icon>&nbsp;全屏</span>
                         <span @click="router.go(0)"><el-icon><Refresh /></el-icon>&nbsp;刷新</span>
                     </div>
                 </div>
@@ -82,11 +82,26 @@
 
     // 根据路由选中菜单
     const menuDefaultActive = ref('/dashboard')
-    watch(() => route.path, (newValue) => {
-        menuDefaultActive.value = newValue
-    })
+    watch(() => route.path, (newValue) => { menuDefaultActive.value = newValue }, { immediate: true })
 
+    // 菜单折叠
     const isCollapse = ref(false)
+
+    // 全屏功能
+    const fullScreen = () => {
+        const doc = document as any
+        let isFull = doc.isFullScreen || doc.mozIsFullScreen || doc.webkitIsFullScreen
+        if (isFull) {
+            let close = doc.exitFullscreen || doc.webkitCancelFullScreen ||
+                doc.mozCancelFullScreen || doc.msExitFullscreen
+            close && close.call(doc)
+        } else {
+            let docElm = document.documentElement as any
+            let open = docElm.requestFullScreen || docElm.webkitRequestFullScreen ||
+                docElm.mozRequestFullScreen || docElm.msRequestFullscreen
+            open && open.call(docElm)
+        }
+    }
 </script>
 
 <style scoped>
