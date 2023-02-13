@@ -3,16 +3,16 @@
     <div class="search">
         <div class="search__left">
             <div class="search__left-item">
-                <el-input v-model="keyword" @change="search" clearable placeholder="输入姓名搜索">
+                <el-input v-model="params.keyWord" @change="search" clearable placeholder="输入姓名搜索">
                     <template #append>
                         <el-button :icon="Search" />
                     </template>
                 </el-input>
             </div>
             <div class="search__left-item">
-                <el-select v-model="status" placeholder="账号状态" clearable>
-                    <el-option label="启用" :value="1"></el-option>
-                    <el-option label="禁用" :value="0"></el-option>
+                <el-select v-model="params.status" @change="search" placeholder="账号状态" clearable>
+                    <el-option label="启用" :value="true"></el-option>
+                    <el-option label="禁用" :value="false"></el-option>
                 </el-select>
             </div>
         </div>
@@ -76,36 +76,42 @@
 </template>
 
 <script lang="ts" setup>
-    import { ref } from 'vue'
+    import { reactive, ref } from 'vue'
     import { IAccount, initAccount } from '../../models/IAccount'
     import { Search, CirclePlusFilled } from '@element-plus/icons-vue'
     import useConfirm from '../../hooks/useConfirm'
+    import $apiAccount from '@/apis/account'
 
     // 列表
-    const list = ref<IAccount[]>([
-        { id: '001', name: '章三', password: '001233', createTime: '2023-01-31', status: true },
-        { id: '001', name: '章三', password: '001233', createTime: '2023-01-31', status: true },
-        { id: '001', name: '章三', password: '001233', createTime: '2023-01-31', status: true },
-        { id: '001', name: '章三', password: '001233', createTime: '2023-01-31', status: false },
-        { id: '001', name: '章三', password: '001233', createTime: '2023-01-31', status: true },
-        { id: '001', name: '章三', password: '001233', createTime: '2023-01-31', status: true },
-        { id: '001', name: '章三', password: '001233', createTime: '2023-01-31', status: true },
-        { id: '001', name: '章三', password: '001233', createTime: '2023-01-31', status: true },
-        { id: '001', name: '章三', password: '001233', createTime: '2023-01-31', status: false },
-        { id: '001', name: '章三', password: '001233', createTime: '2023-01-31', status: true }
-    ])
+    const params = reactive({
+        keyWord: '',
+        status: undefined,
+        pageIndex: 1,
+        pageSize: 10
+    })
+    const list = ref<IAccount[]>([])
+    const total = ref(0)
+    const getList = async () => {
+        const result = await $apiAccount.getList(params)
+        list.value = result.list
+        total.value = result.total
+    }
+
+    // 搜索列表
+    const search = () => {
+        params.pageIndex = 1
+        getList()
+    }
+
+    // 页面加载时调用列表
+    getList()
+
+    // 标记表格状态
     const tableRowClassName = ({ row } : { row: IAccount }) => {
         if (!row.status) {
             return 'danger-row'
         }
         return ''
-    }
-
-    // 搜索
-    const keyword = ref('')
-    const status = ref()
-    const search = () => {
-
     }
 
     // 删除

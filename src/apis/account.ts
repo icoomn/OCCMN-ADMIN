@@ -2,13 +2,13 @@ import http from '@/apis/http'
 import { IAccount } from '@/models/IAccount'
 
 const $apiAccount = {
-    getList () {
+    getList (params: { keyWord: string, status?: boolean, pageIndex?: number, pageSize?: number }) {
         return http<{ list: IAccount[], total: number }>({
             url: 'account/list',
             data: {
-                name: '',
-                pageIndex: 1,
-                pageSize: 10
+                name: params.keyWord,
+                pageIndex: params.pageIndex || 1,
+                pageSize: params.pageSize || 10
             },
             loading: true
         })

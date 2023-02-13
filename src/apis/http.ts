@@ -5,7 +5,7 @@ import { ElMessage, ElLoading } from 'element-plus'
 import router from '@/routers/index'
 
 const instance = axios.create({
-    baseURL: 'https://www.baidu.com',
+    baseURL: 'http://localhost:5173/api/',
     timeout: 3000
 })
 
@@ -33,7 +33,7 @@ const request = <T>(params: IRequestData): Promise<T> => {
         }).then(res => {
             loading && loading.close()
             const model = res.data as IResponseData<T>
-            if (model.code === '000') {
+            if (model.code === '0000') {
                 resolve(model.data)
             } else if (model.code === '401') {
                 router.push('/')
