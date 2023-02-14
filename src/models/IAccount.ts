@@ -2,7 +2,7 @@ interface IAccount {
     id: string
     name: string
     password: string
-    createTime?: string
+    createTime?: Date
     status?: boolean
 }
 
@@ -12,7 +12,7 @@ const initAccount = (options?: Partial<IAccount>):IAccount => {
         id: '',
         name: '',
         password: '',
-        createTime: '',
+        createTime: new Date(),
         status: true
     }
     return { ...defaults, ...options }

@@ -2,9 +2,9 @@ import http from '@/apis/http'
 import { IAccount } from '@/models/IAccount'
 
 const $apiAccount = {
-    getList (params: { keyWord: string, status?: boolean, pageIndex?: number, pageSize?: number }) {
+    list (params: { keyWord: string, status?: boolean, pageIndex?: number, pageSize?: number }) {
         return http<{ list: IAccount[], total: number }>({
-            url: 'account/list',
+            url: 'accounts',
             data: {
                 name: params.keyWord,
                 pageIndex: params.pageIndex || 1,
@@ -13,32 +13,24 @@ const $apiAccount = {
             loading: true
         })
     },
-    addOrEdit (account: IAccount) {
-        return http<void>({
-            url: 'account/addoredit',
+    create (account: IAccount) {
+        return http<any>({
+            url: 'accounts',
             method: 'POST',
-            data: account,
-            loading: true
+            data: account
         })
     },
-    getDetail (id: string) {
-        return http<IAccount>({
-            url: 'account/detail',
-            data: { id }
+    update (account: IAccount) {
+        return http<any>({
+            url: `accounts/${account.id}`,
+            method: 'PATCH',
+            data: account
         })
     },
-    onOrOff (id: string) {
-        return http<void>({
-            url: 'account/onoroff',
-            method: 'POST',
-            data: { id }
-        })
-    },
-    deleteOne (id: string) {
-        return http<void>({
-            url: 'account/deleteone',
-            method: 'DELETE',
-            data: { id }
+    delete (id: string) {
+        return http<any>({
+            url: `accounts/${id}`,
+            method: 'DELETE'
         })
     }
 }

@@ -24,7 +24,7 @@
     <!-- 列表 -->
     <el-table :data="list" :row-class-name="tableRowClassName">
         <el-table-column type="index" label="#" />
-        <el-table-column prop="id" label="编号" />
+        <!-- <el-table-column prop="id" label="编号" /> -->
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="password" label="密码" />
         <el-table-column prop="createTime" label="创建时间" />
@@ -51,8 +51,12 @@
     <el-pagination background
         hide-on-single-page
         layout="sizes, prev, pager, next, total, jumper"
-        :total="1000"
+        :total="total"
+        v-model:page-size="params.pageSize"
+        v-model:current-page="params.pageIndex"
         :page-sizes="[10, 15, 20, 25, 30]"
+        @current-change="getList"
+        @size-change="getList"
         style="margin-top: 20px;"
     />
 
@@ -69,7 +73,7 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确定</el-button>
+                <el-button type="primary" @click="saveAccount">确定</el-button>
             </span>
         </template>
     </el-dialog>
@@ -92,7 +96,7 @@
     const list = ref<IAccount[]>([])
     const total = ref(0)
     const getList = async () => {
-        const result = await $apiAccount.getList(params)
+        const result = await $apiAccount.list(params)
         list.value = result.list
         total.value = result.total
     }
@@ -117,7 +121,11 @@
     // 删除
     const { confirm } = useConfirm()
     const delAccount = (row: IAccount) => {
-        confirm(`确定删除用户 [${row.name}] 吗？`, () => {})
+        confirm(`确定删除用户 [${row.name}] 吗？`, () => {
+            $apiAccount.delete(row.id).then(() => {
+                console.log('okkk');
+            })
+        })
     }
 
     // 编辑新增
@@ -133,6 +141,14 @@
         account.value = row
         dialogTitle.value = '编辑账户'
         dialogVisible.value = true
+    }
+    const saveAccount = () => {
+        if (account.value.id) {
+            $apiAccount.update(account.value)
+        } else {
+            $apiAccount.create(account.value)
+        }
+        // $apiAccount.addOrEdit()
     }
 </script>
 
