@@ -1,18 +1,17 @@
 interface ICategory {
-    id: string
+    id?: string
     name: string
-    sort: string
-    createTime?: string
+    sort: number
+    createTime?: Date
     status?: boolean
 }
 
 // 初始化默认值对象
 const initCategory = (options?: Partial<ICategory>):ICategory => {
     const defaults = {
-        id: '',
         name: '',
-        sort: '0',
-        createTime: '',
+        sort: 0,
+        createTime: new Date(),
         status: true
     }
     return { ...defaults, ...options }

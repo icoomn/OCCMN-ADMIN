@@ -103,7 +103,6 @@
 
     // 搜索列表
     const search = () => {
-        console.log(params.status)
         params.pageIndex = 1
         getList()
     }
