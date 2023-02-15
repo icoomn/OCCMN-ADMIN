@@ -13,7 +13,7 @@
                     <div class="header__tool">
                         <span @click="router.back()"><el-icon><ArrowLeft /></el-icon>&nbsp;返回</span>
                         <span @click="fullScreen"><el-icon><FullScreen /></el-icon>&nbsp;全屏</span>
-                        <span @click="router.go(0)"><el-icon><Refresh /></el-icon>&nbsp;刷新</span>
+                        <span @click="doRefresh"><el-icon><Refresh /></el-icon>&nbsp;刷新</span>
                     </div>
                 </div>
                 <div class="header__quit">
@@ -68,7 +68,7 @@
                     <span>分类管理</span>
                 </el-menu-item>
             </el-menu>
-            <el-main style="height: calc(100vh - 60px);"><router-view></router-view></el-main>
+            <el-main style="height: calc(100vh - 60px);"><router-view v-if="refresh"></router-view></el-main>
         </el-container>
     </el-container>
 </template>
@@ -101,6 +101,13 @@
                 docElm.mozRequestFullScreen || docElm.msRequestFullscreen
             open && open.call(docElm)
         }
+    }
+
+    // 刷新
+    const refresh = ref<boolean>(true)
+    const doRefresh = () => {
+        refresh.value = false
+        setTimeout(() => refresh.value = true, 10)
     }
 </script>
 

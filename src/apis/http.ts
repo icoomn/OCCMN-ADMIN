@@ -36,7 +36,7 @@ const request = <T>(params: IRequestData): Promise<T> => {
             const model = res.data as IResponseData<T>
             if (model.code === '0000') {
                 resolve(model.data)
-            } else if (model.code === '401') {
+            } else if (model.code === '4000') {
                 router.push('/')
             } else {
                 ElMessage.error(model.message || '接口请求失败')

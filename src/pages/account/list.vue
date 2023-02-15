@@ -24,11 +24,10 @@
     <!-- 列表 -->
     <el-table :data="list" :row-class-name="tableRowClassName">
         <el-table-column type="index" label="#" />
-        <!-- <el-table-column prop="id" label="编号" /> -->
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="password" label="密码" />
         <el-table-column prop="createTime" label="创建时间" />
-        <el-table-column prop="status" label="状态">
+        <el-table-column prop="status" label="状态" width="150">
             <template #default="scope">
                 <el-switch
                     v-model="scope.row.status"
@@ -36,10 +35,11 @@
                     style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
                     active-text="启用"
                     inactive-text="禁用"
+                    @change="$apiAccount.update(scope.row)"
                 />
             </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="230">
+        <el-table-column label="操作" align="right" width="230">
             <template #default="scope">
                 <el-button type="danger" @click="delAccount(scope.row)">删除</el-button>
                 <el-button type="primary" @click="editAccount(scope.row)">编辑</el-button>
@@ -89,7 +89,7 @@
     // 列表
     const params = reactive({
         keyWord: '',
-        status: undefined,
+        status: '',
         pageIndex: 1,
         pageSize: 10
     })
@@ -103,6 +103,7 @@
 
     // 搜索列表
     const search = () => {
+        console.log(params.status)
         params.pageIndex = 1
         getList()
     }
@@ -121,9 +122,9 @@
     // 删除
     const { confirm } = useConfirm()
     const delAccount = (row: IAccount) => {
-        confirm(`确定删除用户 [${row.name}] 吗？`, () => {
-            $apiAccount.delete(row.id).then(() => {
-                console.log('okkk');
+        confirm(`确定删除账户 [${row.name}] 吗？`, () => {
+            $apiAccount.delete(row.id!).then(() => {
+                getList()
             })
         })
     }
@@ -138,17 +139,18 @@
         dialogVisible.value = true
     }
     const editAccount = (row: IAccount) => {
-        account.value = row
+        account.value = initAccount(row)
         dialogTitle.value = '编辑账户'
         dialogVisible.value = true
     }
-    const saveAccount = () => {
+    const saveAccount = async () => {
         if (account.value.id) {
-            $apiAccount.update(account.value)
+            await $apiAccount.update(account.value)
         } else {
-            $apiAccount.create(account.value)
+            await $apiAccount.create(account.value)
         }
-        // $apiAccount.addOrEdit()
+        dialogVisible.value = false
+        getList()
     }
 </script>
 

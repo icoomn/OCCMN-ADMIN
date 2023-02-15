@@ -2,15 +2,16 @@ import http from '@/apis/http'
 import { IAccount } from '@/models/IAccount'
 
 const $apiAccount = {
-    list (params: { keyWord: string, status?: boolean, pageIndex?: number, pageSize?: number }) {
+    list (params: { keyWord: string, status?: string, pageIndex?: number, pageSize?: number }) {
         return http<{ list: IAccount[], total: number }>({
             url: 'accounts',
             data: {
-                name: params.keyWord,
+                keyWord: params.keyWord,
+                status: params.status,
                 pageIndex: params.pageIndex || 1,
                 pageSize: params.pageSize || 10
             },
-            loading: true
+            loading: false
         })
     },
     create (account: IAccount) {
