@@ -17,12 +17,12 @@
             </div>
         </div>
         <div class="search__right">
-            <el-button type="primary" :icon="CirclePlusFilled" @click="addAccount">新增</el-button>
+            <el-button type="primary" :icon="CirclePlusFilled" @click="add('账户')">新增</el-button>
         </div>
     </div>
     
     <!-- 列表 -->
-    <el-table :data="list" :row-class-name="tableRowClassName">
+    <el-table :data="list" stripe>
         <el-table-column type="index" label="#" />
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="password" label="密码" />
@@ -41,8 +41,8 @@
         </el-table-column>
         <el-table-column label="操作" align="right" width="230">
             <template #default="scope">
-                <el-button type="danger" @click="delAccount(scope.row)">删除</el-button>
-                <el-button type="primary" @click="editAccount(scope.row)">编辑</el-button>
+                <el-button type="danger" :icon="Delete" @click="remove(scope.row)">删除</el-button>
+                <el-button type="primary" :icon="Edit" @click="edit(scope.row, '账户')">编辑</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -51,9 +51,9 @@
     <el-pagination background
         hide-on-single-page
         layout="sizes, prev, pager, next, total, jumper"
-        :total="total"
-        v-model:page-size="params.pageSize"
-        v-model:current-page="params.pageIndex"
+        :total="paging.total"
+        v-model:page-size="paging.pageSize"
+        v-model:current-page="paging.pageIndex"
         :page-sizes="[10, 15, 20, 25, 30]"
         @current-change="getList"
         @size-change="getList"
@@ -73,54 +73,34 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="saveAccount">确定</el-button>
+                <el-button type="primary" @click="save">确定</el-button>
             </span>
         </template>
     </el-dialog>
 </template>
 
 <script lang="ts" setup>
-    import { reactive, ref } from 'vue'
+    import { reactive } from 'vue'
     import { IAccount, initAccount } from '../../models/IAccount'
-    import { Search, CirclePlusFilled } from '@element-plus/icons-vue'
+    import { Search, CirclePlusFilled, Delete, Edit } from '@element-plus/icons-vue'
     import useConfirm from '../../hooks/useConfirm'
+    import useListPage from '@/hooks/useListPage'
+    import useModify from '@/hooks/useModify'
     import $apiAccount from '@/apis/account'
 
     // 列表
-    const params = reactive({
-        keyWord: '',
-        status: '',
-        pageIndex: 1,
-        pageSize: 10
-    })
-    const list = ref<IAccount[]>([])
-    const total = ref(0)
-    const getList = async () => {
-        const result = await $apiAccount.list(params)
-        list.value = result.list
-        total.value = result.total
-    }
-
-    // 搜索列表
-    const search = () => {
-        params.pageIndex = 1
-        getList()
-    }
-
-    // 页面加载时调用列表
+    const params = reactive({ keyWord: '', status: '' })
+	const {
+        list,
+        paging,
+        getList,
+        search
+    } = useListPage<IAccount>($apiAccount.list, params)
     getList()
-
-    // 标记表格状态
-    const tableRowClassName = ({ row } : { row: IAccount }) => {
-        if (!row.status) {
-            return 'danger-row'
-        }
-        return ''
-    }
 
     // 删除
     const { confirm } = useConfirm()
-    const delAccount = (row: IAccount) => {
+    const remove = (row: IAccount) => {
         confirm(`确定删除账户 [${row.name}] 吗？`, () => {
             $apiAccount.delete(row.id!).then(() => {
                 getList()
@@ -129,20 +109,14 @@
     }
 
     // 编辑新增
-    const dialogVisible = ref(false)
-    const dialogTitle = ref('')
-    const account = ref<IAccount>(initAccount())
-    const addAccount = () => {
-        account.value = initAccount()
-        dialogTitle.value = '新增账户'
-        dialogVisible.value = true
-    }
-    const editAccount = (row: IAccount) => {
-        account.value = initAccount(row)
-        dialogTitle.value = '编辑账户'
-        dialogVisible.value = true
-    }
-    const saveAccount = async () => {
+    const {
+        dialogVisible,
+        dialogTitle,
+        model: account,
+        add,
+        edit
+    } = useModify<IAccount>(initAccount)
+    const save = async () => {
         if (account.value.id) {
             await $apiAccount.update(account.value)
         } else {
@@ -152,7 +126,3 @@
         getList()
     }
 </script>
-
-<style scoped>
-    
-</style>

@@ -1,4 +1,4 @@
-import { reactive, Ref, ref, toRef } from "vue"
+import { reactive, Ref, ref } from "vue"
 import { IPaging, initPaging } from "../models/IPaging"
 
 // 将params参数限定为object对象类型
@@ -19,5 +19,9 @@ export default <T>(listRequest: Function, params: IParams) => {
         list.value = result.list
         paging.total = result.total
     }
-    return { list, paging, getList }
+    const search = () => {
+        paging.pageIndex = 1
+        getList()
+    }
+    return { list, paging, getList, search }
 }

@@ -2,19 +2,27 @@
     <!-- 搜索 -->
     <div class="search">
         <div class="search__left">
-            <el-input v-model="params.keyWord" @change="search" clearable placeholder="输入名称搜索">
-                <template #append>
-                    <el-button :icon="Search" />
-                </template>
-            </el-input>
+            <div class="search__left-item">
+                <el-input v-model="params.keyWord" @change="search" clearable placeholder="输入名称搜索">
+                    <template #append>
+                        <el-button :icon="Search" />
+                    </template>
+                </el-input>
+            </div>
+            <div class="search__left-item">
+                <el-select v-model="params.status" @change="search" placeholder="分类状态" clearable>
+                    <el-option label="启用" :value="true"></el-option>
+                    <el-option label="禁用" :value="false"></el-option>
+                </el-select>
+            </div>
         </div>
         <div class="search__right">
-            <el-button type="primary" :icon="CirclePlusFilled" @click="addCategory">新增</el-button>
+            <el-button type="primary" :icon="CirclePlusFilled" @click="add('分类')">新增</el-button>
         </div>
     </div>
     
     <!-- 列表 -->
-    <el-table :data="list" :row-class-name="tableRowClassName">
+    <el-table :data="list" stripe>
         <el-table-column type="index" label="#" />
         <el-table-column prop="name" label="名称" />
         <el-table-column prop="sort" label="排序" />
@@ -33,8 +41,8 @@
         </el-table-column>
         <el-table-column label="操作" align="right" width="230">
             <template #default="scope">
-                <el-button type="danger" @click="delCategory(scope.row)">删除</el-button>
-                <el-button type="primary" @click="editCategory(scope.row)">编辑</el-button>
+                <el-button type="danger" :icon="Delete" @click="remove(scope.row)">删除</el-button>
+                <el-button type="primary" :icon="Edit" @click="edit(scope.row, '分类')">编辑</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -65,39 +73,34 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="saveCategory">确定</el-button>
+                <el-button type="primary" @click="save">确定</el-button>
             </span>
         </template>
     </el-dialog>
 </template>
 
 <script lang="ts" setup>
-    import { reactive, ref } from 'vue'
+    import { reactive } from 'vue'
     import { ICategory, initCategory } from '../../models/ICategory'
-    import { Search, CirclePlusFilled } from '@element-plus/icons-vue'
+    import { Search, CirclePlusFilled, Delete, Edit } from '@element-plus/icons-vue'
 	import $apiCategory from '@/apis/categories'
     import useConfirm from '../../hooks/useConfirm'
 	import useListPage from '../../hooks/useListPage'
+    import useModify from '@/hooks/useModify'
 
-    const params = reactive({
-		keyWord: '',
-        status: ''
-	})
-	const { list, paging, getList } = useListPage<ICategory>($apiCategory.list, params)
-	getList()
+    // 列表
+    const params = reactive({ keyWord: '', status: '' })
+	const {
+        list,
+        paging,
+        getList,
+        search
+    } = useListPage<ICategory>($apiCategory.list, params)
+    getList()
 	
-	// 标记表格状态
-    const tableRowClassName = ({ row } : { row: ICategory }) => { return row.status ? '' : 'danger-row' }
-
-    // 搜索
-    const search = () => {
-		paging.pageIndex = 1
-		getList()
-    }
-
     // 删除
     const { confirm } = useConfirm()
-    const delCategory = (row: ICategory) => {
+    const remove = (row: ICategory) => {
         confirm(`确定删除分类 [${row.name}] 吗？`, () => {
 			$apiCategory.delete(row.id!).then(() => {
                 getList()
@@ -106,20 +109,14 @@
     }
 
     // 编辑新增
-    const dialogVisible = ref(false)
-    const dialogTitle = ref('')
-    const category = ref<ICategory>(initCategory())
-    const addCategory = () => {
-        category.value = initCategory()
-        dialogTitle.value = '新增分类'
-        dialogVisible.value = true
-    }
-    const editCategory = (row: ICategory) => {
-        category.value = initCategory(row)
-        dialogTitle.value = '编辑分类'
-        dialogVisible.value = true
-    }
-	const saveCategory = async () => {
+    const {
+        dialogVisible,
+        dialogTitle,
+        model: category,
+        add,
+        edit
+    } = useModify<ICategory>(initCategory)
+	const save = async () => {
         if (category.value.id) {
             await $apiCategory.update(category.value)
         } else {
@@ -129,6 +126,3 @@
         getList()
     }
 </script>
-
-<style scoped>
-</style>

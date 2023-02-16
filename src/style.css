@@ -19,8 +19,3 @@ html, body {
 .search__left-item {
     margin-right: 10px;
 }
-
-/* Element表格公共样式 */
-.el-table .danger-row {
-    --el-table-tr-bg-color: var(--el-color-danger-light-9);
-}
