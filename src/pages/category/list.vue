@@ -27,7 +27,7 @@
         <el-table-column prop="name" label="名称" />
         <el-table-column prop="sort" label="排序" />
         <el-table-column prop="createTime" label="创建时间" />
-        <el-table-column prop="status" label="状态">
+        <el-table-column prop="status" label="状态" align="center">
             <template #default="scope">
                 <el-switch
                     v-model="scope.row.status"

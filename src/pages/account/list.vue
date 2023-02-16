@@ -27,7 +27,7 @@
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="password" label="密码" />
         <el-table-column prop="createTime" label="创建时间" />
-        <el-table-column prop="status" label="状态" width="150">
+        <el-table-column prop="status" label="状态" width="150" align="center">
             <template #default="scope">
                 <el-switch
                     v-model="scope.row.status"

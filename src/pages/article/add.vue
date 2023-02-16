@@ -1,7 +1,7 @@
 <template>
     <div class="bodyer">
         <div class="bodyer-main">
-            <div class="main-title"><input class="title" type="text" placeholder="请输入文章标题"></div>
+            <div class="main-title"><input class="title" type="text" v-model="article.title" placeholder="请输入文章标题"></div>
             <div class="main-editor">
                 <Editor
                     api-key="ezplca8k39c8ww5xkmly2tp03if9tht5lubgnzoutmhzsuqd"
@@ -10,8 +10,12 @@
                         language: 'zh_CN',
                         plugins: 'lists link image table code help wordcount'
                     }"
+					v-model="article.content"
                 />
             </div>
+			<div class="main-intro">
+				<el-input type="textarea" v-model="article.intro" placeholder="请输入文章简介，一段好的介绍更能吸引读者的目光~" :rows="5"></el-input>
+			</div>
             <div class="main-uploader">
                 <el-upload
                     drag
@@ -34,8 +38,8 @@
         <div class="footer-main">
             <div><span>存为草稿则只在后台列表显示，相当于【下架】状态；发布则相当于【上架】，所有读者可见</span></div>
             <div>
-                <el-button>存为草稿</el-button>
-                <el-button type="primary">发布</el-button>
+                <el-button @click="router.back()">返回列表</el-button>
+                <el-button type="primary" :icon="Promotion" @click="save">发布</el-button>
             </div>
         </div>
     </div>
@@ -43,6 +47,30 @@
 
 <script lang="ts" setup>
     import Editor from '@tinymce/tinymce-vue'
+	import { IArticle, initArticle } from '@/models/IArticle'
+	import { ref } from 'vue'
+	import $apiArticle from '@/apis/article'
+	import { useRouter, useRoute } from 'vue-router'
+	import { Promotion } from '@element-plus/icons-vue'
+
+	const router = useRouter()
+	const route = useRoute()
+	const article = ref<IArticle>(initArticle())
+
+	const detail = async () => {
+		const id = route.query.id
+		if (id) {
+			const model = await $apiArticle.detail(id.toString())
+			article.value = model
+		}
+	}
+
+	detail()
+
+	const save = async () => {
+		await $apiArticle.create(article.value)
+		router.back()
+	}
 </script>
 
 <style scoped>
@@ -72,7 +100,7 @@
         margin-top: 30px;
     }
 
-    .main-uploader {
+    .main-intro, .main-uploader {
         margin-top: 30px;
     }
     
@@ -80,7 +108,7 @@
         position: fixed;
         right: 0;
         bottom: 0;
-        width: calc(100% - 200px);
+        width: calc(100% - 150px);
         height: 60px;
         border-top: 1px solid #eee;
         background-color: #fff;
