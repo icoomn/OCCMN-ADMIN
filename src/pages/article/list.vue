@@ -16,14 +16,20 @@
     <!-- 列表 -->
     <el-table :data="list" stripe>
         <el-table-column type="index" label="#" />
-        <el-table-column prop="title" label="标题" width="600" />
-		<el-table-column prop="title" label="封面图">
+        <el-table-column prop="title" label="标题" width="300" show-overflow-tooltip />
+		<el-table-column prop="title" label="封面图" width="175">
 			<template #default="scope">
-				<img :src="scope.row.coverPicture" class="cover-img" width="150" height="40" :alt="scope.row.title">
+                <div class="img-wrapper">
+                    <img :src="scope.row.coverPicture" class="cover-img" :alt="scope.row.title">
+                </div>
 			</template>
 		</el-table-column>
 		<el-table-column prop="viewCount" label="阅读量" align="center" />
-		<el-table-column prop="createTime" label="创建时间" />
+		<el-table-column prop="createTime" label="创建时间" width="120">
+            <template #default="scope">
+                {{ dateFormat(scope.row.createTime) }}
+            </template>
+        </el-table-column>
         <el-table-column prop="status" label="状态" width="150" align="center">
             <template #default="scope">
                 <el-switch
@@ -61,6 +67,7 @@
     import { reactive } from 'vue'
     import { IArticle } from '../../models/IArticle'
     import { Search, CirclePlusFilled, Delete, Edit } from '@element-plus/icons-vue'
+    import { dateFormat } from '@/utils/dateFormat'
     import useConfirm from '../../hooks/useConfirm'
 	import useListPage from '@/hooks/useListPage'
 	import { useRouter } from 'vue-router'
@@ -96,7 +103,12 @@
 </script>
 
 <style scoped>
+.img-wrapper {
+    line-height: 0;
+}
 .cover-img {
+    width: 150px;
+    height: 30px;
 	border-radius: 4px;
 }
 </style>

@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="header__quit">
-                    <el-dropdown>
+                    <el-dropdown @command="handleCommand">
                         <span class="el-dropdown-link">
                             <span>管理员</span>
                             <el-icon class="el-icon--right">
@@ -26,8 +26,8 @@
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item>修改密码</el-dropdown-item>
-                                <el-dropdown-item divided>退出登陆</el-dropdown-item>
+                                <el-dropdown-item command="modify">修改密码</el-dropdown-item>
+                                <el-dropdown-item command="logout" divided>退出登陆</el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
@@ -71,11 +71,33 @@
             <el-main style="height: calc(100vh - 60px);"><router-view v-if="refresh"></router-view></el-main>
         </el-container>
     </el-container>
+
+    <!-- 修改密码 -->
+    <el-dialog v-model="dialogVisible" title="修改密码" width="500px">
+        <el-form :model="password" :rules="rules" ref="ruleFormRef">
+            <el-form-item label="原密码" prop="old">
+                <el-input v-model="password.old" type="password" placeholder="请输入原密码" />
+            </el-form-item>
+            <el-form-item label="新密码" prop="new">
+                <el-input v-model="password.new" type="password" placeholder="请输入新密码" />
+            </el-form-item>
+            <el-form-item label="新密码" prop="newRepeat">
+                <el-input v-model="password.newRepeat" type="password" placeholder="请确认新密码" />
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="modifyPassword(ruleFormRef)">确定</el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 
 <script lang="ts" setup>
     import { useRoute, useRouter } from 'vue-router'
-    import { ref, watch } from 'vue'
+    import { reactive, ref, watch } from 'vue'
+    import { FormRules, FormInstance } from 'element-plus'
 
     const route = useRoute()
     const router = useRouter()
@@ -109,6 +131,46 @@
         refresh.value = false
         setTimeout(() => refresh.value = true, 10)
     }
+
+    // 修改密码
+    const ruleFormRef = ref<FormInstance>()
+    const dialogVisible = ref(false)
+    const password = reactive({ old: '', new: '', newRepeat: '' })
+    const handleCommand = (command: string) => {
+        if (command === 'logout') {
+            router.replace('/login')
+        } else {
+            password.old = ''
+            password.new = ''
+            password.newRepeat = ''
+            dialogVisible.value = true
+        }
+    }
+    const modifyPassword = (formEl: FormInstance | undefined) => {
+        if (!formEl) return
+        formEl.validate(valid => {
+            if (valid) {
+                dialogVisible.value = false
+            } else {
+                return false
+            }
+        })
+    }
+    const compareNewPassword = (rule: any, value: any, callback: any) => {
+        if (value !== password.new) {
+            callback(new Error('两次密码不一致'))
+        } else {
+            callback()
+        }
+    }
+    const rules = reactive<FormRules>({
+        old: [{ required: true, message: '请输入原密码', trigger: 'blur' }],
+        new: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+        newRepeat: [
+            { required: true, message: '请输入新密码', trigger: 'blur' },
+            { validator: compareNewPassword, trigger: 'blur' }
+        ]
+    })
 </script>
 
 <style scoped>

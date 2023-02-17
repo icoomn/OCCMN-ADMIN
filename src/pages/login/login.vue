@@ -40,6 +40,7 @@
     import { ref, reactive } from 'vue'
     import type { FormInstance, FormRules } from 'element-plus'
     import router from '@/routers/index'
+    import $apiAuth from '@/apis/auth'
 
     const login = reactive({
         name: '',
@@ -70,13 +71,18 @@
         if (!formEl) return
         await formEl.validate((valid, fields) => {
             if (valid) {
-                const cache = {
-                    name: login.isRemember ? login.name : '',
-                    password: login.isRemember ? login.password : '',
-                    isRemember: login.isRemember
-                }
-                localStorage.setItem('loginForm', JSON.stringify(cache))
-                router.replace('/dashboard')
+                const result = $apiAuth.login(login.name, login.password)
+
+                console.log({result});
+                
+
+                // const cache = {
+                //     name: login.isRemember ? login.name : '',
+                //     password: login.isRemember ? login.password : '',
+                //     isRemember: login.isRemember
+                // }
+                // localStorage.setItem('loginForm', JSON.stringify(cache))
+                // router.replace('/dashboard')
             }
         })
     }

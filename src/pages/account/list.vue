@@ -26,7 +26,11 @@
         <el-table-column type="index" label="#" />
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="password" label="密码" />
-        <el-table-column prop="createTime" label="创建时间" />
+        <el-table-column prop="createTime" label="创建时间">
+            <template #default="scope">
+                {{ dateFormat(scope.row.createTime) }}
+            </template>
+        </el-table-column>
         <el-table-column prop="status" label="状态" width="150" align="center">
             <template #default="scope">
                 <el-switch
@@ -83,6 +87,7 @@
     import { reactive } from 'vue'
     import { IAccount, initAccount } from '../../models/IAccount'
     import { Search, CirclePlusFilled, Delete, Edit } from '@element-plus/icons-vue'
+    import { dateFormat } from '@/utils/dateFormat'
     import useConfirm from '../../hooks/useConfirm'
     import useListPage from '@/hooks/useListPage'
     import useModify from '@/hooks/useModify'
