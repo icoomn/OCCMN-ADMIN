@@ -43,8 +43,8 @@
     import $apiAuth from '@/apis/auth'
 
     const login = reactive({
-        name: '',
-        password: '',
+        name: '鄢云峰',
+        password: '123123',
         isRemember: false
     })
 
@@ -69,20 +69,17 @@
     // 表单提交
     const onSubmit = async (formEl: FormInstance | undefined) => {
         if (!formEl) return
-        await formEl.validate((valid, fields) => {
+        await formEl.validate(async (valid, fields) => {
             if (valid) {
-                const result = $apiAuth.login(login.name, login.password)
-
-                console.log({result});
-                
-
-                // const cache = {
-                //     name: login.isRemember ? login.name : '',
-                //     password: login.isRemember ? login.password : '',
-                //     isRemember: login.isRemember
-                // }
-                // localStorage.setItem('loginForm', JSON.stringify(cache))
-                // router.replace('/dashboard')
+                const token = await $apiAuth.login(login.name, login.password)
+                const cache = {
+                    name: login.isRemember ? login.name : '',
+                    password: login.isRemember ? login.password : '',
+                    isRemember: login.isRemember,
+                    token
+                }
+                localStorage.setItem('loginForm', JSON.stringify(cache))
+                router.replace('/dashboard')
             }
         })
     }

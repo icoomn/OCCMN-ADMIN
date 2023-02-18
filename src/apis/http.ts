@@ -2,7 +2,7 @@ import axios from 'axios'
 import IRequestData from '@/models/IRequestData'
 import IResponseData from '@/models/IResponseData'
 import { ElMessage, ElLoading } from 'element-plus'
-import router from '@/routers/index'
+import router from '../routers/index'
 
 const instance = axios.create({
     baseURL: '/api/',
@@ -10,6 +10,12 @@ const instance = axios.create({
 })
 
 instance.interceptors.request.use((config) => {
+    const loginForm = localStorage.getItem('loginForm')
+    let token = ''
+    if (loginForm) {
+        token = JSON.parse(loginForm).token
+    }
+    config.headers.Authorization = 'Bearer ' + token
     return config
 }, (error) => {
     return Promise.reject(error)
@@ -34,15 +40,18 @@ const request = <T>(params: IRequestData): Promise<T> => {
         }).then(res => {
             loading && loading.close()
             const model = res.data as IResponseData<T>
-            if (model.code === '0000') {
+            if (model.code === '000') {
                 resolve(model.data)
-            } else if (model.code === '4000') {
-                router.push('/')
             } else {
                 ElMessage.error(model.message || '接口请求失败')
             }
         }).catch(error => {
-            reject(error)
+            const res = error.response
+            if (res.data.code === '401') {
+                router.push('/login')
+            }
+            reject(res.data)
+        }).finally(() => {
             loading && loading.close()
         })
     })
