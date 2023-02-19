@@ -36,6 +36,7 @@
         </el-header>
         <el-container>
             <el-menu style="height: calc(100vh - 60px);"
+				
                 active-text-color="#ffd04b"
                 background-color="#545c64"
                 :default-active="menuDefaultActive"
@@ -47,21 +48,29 @@
                     <el-icon><DataLine /></el-icon>
                     <span>数据看板</span>
                 </el-menu-item>
+				<el-menu-item index="/role/list">
+                    <el-icon><Medal /></el-icon>
+                    <span>角色管理</span>
+                </el-menu-item>
+				<el-menu-item index="/role/list">
+                    <el-icon><Unlock /></el-icon>
+                    <span>权限管理</span>
+                </el-menu-item>
                 <el-menu-item index="/account/list">
                     <el-icon><User /></el-icon>
                     <span>账户管理</span>
                 </el-menu-item>
-                <el-sub-menu index="/article">
-                    <template #title>
-                        <el-icon><Memo /></el-icon>
-                        <span>文章管理</span>
-                    </template>
-                    <el-menu-item index="/article/list">文章列表</el-menu-item>
-                    <el-menu-item index="/article/comment">文章评论</el-menu-item>
-                </el-sub-menu>
-                <el-menu-item index="/product/list">
-                    <el-icon> <Handbag /></el-icon>
-                    <span>商品管理</span>
+				<el-menu-item index="/article/list">
+                    <el-icon><Memo /></el-icon>
+                    <span>文章管理</span>
+                </el-menu-item>
+				<el-menu-item index="/article/comment">
+                    <el-icon><ChatDotRound /></el-icon>
+                    <span>评论管理</span>
+                </el-menu-item>
+				<el-menu-item index="/article/comment">
+                    <el-icon><Bowl /></el-icon>
+                    <span>打赏管理</span>
                 </el-menu-item>
                 <el-menu-item index="/category/list">
                     <el-icon><Operation /></el-icon>
@@ -200,4 +209,7 @@
         font-size: 14px;
         cursor: pointer;
     }
+	:deep(.el-menu-item) {
+		padding-right: 45px;
+	}
 </style>

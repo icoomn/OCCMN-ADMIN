@@ -20,6 +20,11 @@ const routes = [
                 name: 'dashboard',
                 component: () => import('../pages/dashboard/dashboard.vue')
             },
+			{
+                path: '/role/list',
+                name: 'roleList',
+                component: () => import('../pages/role/list.vue')
+            },
             {
                 path: '/account/list',
                 name: 'accountList',
