@@ -68,7 +68,7 @@
                     <el-icon><ChatDotRound /></el-icon>
                     <span>评论管理</span>
                 </el-menu-item>
-				<el-menu-item index="/article/comment">
+				<el-menu-item index="/reward/list">
                     <el-icon><Bowl /></el-icon>
                     <span>打赏管理</span>
                 </el-menu-item>

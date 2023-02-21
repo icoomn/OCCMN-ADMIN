@@ -55,6 +55,11 @@ const routes = [
                 name: 'categoryList',
                 component: () => import('../pages/category/list.vue')
             },
+			{
+                path: '/reward/list',
+                name: 'rewardList',
+                component: () => import('../pages/reward/list.vue')
+            },
             {
                 path: '/404',
                 name: 'none',
