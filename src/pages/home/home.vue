@@ -52,7 +52,7 @@
                     <el-icon><Medal /></el-icon>
                     <span>角色管理</span>
                 </el-menu-item>
-				<el-menu-item index="/role/list">
+				<el-menu-item index="/permission/list">
                     <el-icon><Unlock /></el-icon>
                     <span>权限管理</span>
                 </el-menu-item>
