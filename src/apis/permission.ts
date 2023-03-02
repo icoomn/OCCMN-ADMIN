@@ -2,10 +2,11 @@ import http from '@/apis/http'
 import { IPermission } from '@/models/IPermission'
 
 const $apiPermission = {
-    list (params: { pageIndex?: number, pageSize?: number }) {
+    list (params: { keyWord: string, pageIndex?: number, pageSize?: number }) {
         return http<{ list: IPermission[], total: number }>({
             url: 'permissions',
             data: {
+				keyWord: params.keyWord,
                 pageIndex: params.pageIndex || 1,
                 pageSize: params.pageSize || 10
             },

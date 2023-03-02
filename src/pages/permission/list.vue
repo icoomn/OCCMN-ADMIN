@@ -9,12 +9,6 @@
                     </template>
                 </el-input>
             </div>
-            <div class="search__left-item">
-                <el-select v-model="params.status" @change="search" placeholder="分类状态" clearable>
-                    <el-option label="启用" :value="true"></el-option>
-                    <el-option label="禁用" :value="false"></el-option>
-                </el-select>
-            </div>
         </div>
         <div class="search__right">
             <el-button type="primary" :icon="CirclePlusFilled" @click="add('权限')">新增</el-button>
@@ -24,18 +18,14 @@
     <!-- 列表 -->
     <el-table :data="list" stripe>
         <el-table-column type="index" label="#" width="200" />
-		<el-table-column prop="createTime" label="名称">
-            <template #default="scope">
-                {{ dateFormat(scope.row.createTime) }}
-            </template>
-        </el-table-column>
-        <el-table-column prop="amount" label="类型" align="center">
+		<el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column prop="type" label="类型" align="center">
 			<template #default="scope">
-                <span class="money">￥{{ scope.row.amount.toFixed(2) }}</span>
+                {{ scope.row.type === 0 ? '菜单级' : '按钮级' }}
             </template>
 		</el-table-column>
-        <el-table-column prop="payMethod" label="路由" align="center" />
-		<el-table-column prop="payMethod" label="所属上级" align="center" />
+        <el-table-column prop="path" label="路由" align="center" />
+		<el-table-column prop="parentId" label="所属上级" align="center" />
         <el-table-column label="操作" align="right" width="230">
             <template #default="scope">
                 <el-button type="danger" :icon="Delete" @click="remove(scope.row)">删除</el-button>
@@ -46,7 +36,7 @@
 
     <!-- 分页 -->
     <el-pagination background
-        hide-on-single-page
+		hide-on-single-page
         layout="sizes, prev, pager, next, total, jumper"
         :total="paging.total"
         v-model:page-size="paging.pageSize"
@@ -100,7 +90,7 @@
     import useModify from '@/hooks/useModify'
 
     // 列表
-    const params = reactive({ keyWord: '', status: '' })
+    const params = reactive({ keyWord: '' })
 	const {
         list,
         paging,
@@ -112,7 +102,7 @@
     // 删除
     const { confirm } = useConfirm()
     const remove = (row: IPermission) => {
-        confirm(`确定删除打赏 [${row.name}] 吗？`, () => {
+        confirm(`确定删除权限 [${row.name}] 吗？`, () => {
 			$apiPermission.delete(row.id!).then(() => {
                 getList()
             })
@@ -139,8 +129,5 @@
 </script>
 
 <style>
-	.money {
-		font-weight: bold;
-		color: darkcyan;
-	}
+	
 </style>
