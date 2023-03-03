@@ -58,12 +58,14 @@
 
     <!-- 新增/编辑 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500px">
-        <el-form :model="reward">
-            <el-form-item label="打赏金额">
-                <el-input v-model.number="reward.amount" type="number" />
+        <el-form :model="role">
+            <el-form-item label="名称">
+                <el-input v-model="role.name" />
             </el-form-item>
-            <el-form-item label="支付方式">
-                <el-input v-model="reward.payMethod" />
+            <el-form-item label="权限">
+				<el-select v-model="role.permissions" value-key="id" multiple style="width: 100%">
+					<el-option v-for="item in permissions" :key="item.id" :label="item.name" :value="item"></el-option>
+				</el-select>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -76,14 +78,16 @@
 </template>
 
 <script lang="ts" setup>
-    import { reactive } from 'vue'
-	import { IReward, initReward } from '../../models/IReward'
+    import { reactive, ref } from 'vue'
+	import { IRole, initRole } from '../../models/IRole'
     import { Search, CirclePlusFilled, Delete, Edit } from '@element-plus/icons-vue'
     import { dateFormat } from '@/utils/dateFormat'
-	import $apiReward from '@/apis/reward'
+	import $apiRole from '@/apis/role'
+	import $apiPermission from '@/apis/permission'
     import useConfirm from '../../hooks/useConfirm'
 	import useListPage from '../../hooks/useListPage'
     import useModify from '@/hooks/useModify'
+	import { IPermission } from '@/models/IPermission'
 
     // 列表
     const params = reactive({ keyWord: '', status: '' })
@@ -92,14 +96,14 @@
         paging,
         getList,
         search
-    } = useListPage<IReward>($apiReward.list, params)
+    } = useListPage<IRole>($apiRole.list, params)
     getList()
 	
     // 删除
     const { confirm } = useConfirm()
-    const remove = (row: IReward) => {
-        confirm(`确定删除打赏 [${row.amount}] 吗？`, () => {
-			$apiReward.delete(row.id!).then(() => {
+    const remove = (row: IRole) => {
+        confirm(`确定删除打赏 [${row.name}] 吗？`, () => {
+			$apiRole.delete(row.id!).then(() => {
                 getList()
             })
 		})
@@ -109,19 +113,27 @@
     const {
         dialogVisible,
         dialogTitle,
-        model: reward,
+        model: role,
         add,
         edit
-    } = useModify<IReward>(initReward)
+    } = useModify<IRole>(initRole)
 	const save = async () => {
-        if (reward.value.id) {
-            await $apiReward.update(reward.value)
+        if (role.value.id) {
+            await $apiRole.update(role.value)
         } else {
-            await $apiReward.create(reward.value)
+            await $apiRole.create(role.value)
         }
         dialogVisible.value = false
         getList()
     }
+
+	// 获取权限列表
+	const permissions = ref<IPermission[]>([])
+	const getPermissionList = async () => {
+		const result = await $apiPermission.list({ keyWord: '' })
+		permissions.value = result.list
+	}
+	getPermissionList()
 </script>
 
 <style>
