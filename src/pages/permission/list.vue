@@ -19,13 +19,13 @@
     <el-table :data="list" stripe>
         <el-table-column type="index" label="#" width="200" />
 		<el-table-column prop="name" label="名称"></el-table-column>
-        <el-table-column prop="type" label="类型" align="center">
+        <el-table-column prop="type" label="类型">
 			<template #default="scope">
                 {{ scope.row.type === 0 ? '菜单级' : '按钮级' }}
             </template>
 		</el-table-column>
-        <el-table-column prop="path" label="路由" align="center" />
-		<el-table-column prop="parentId" label="所属上级" align="center" />
+        <el-table-column prop="path" label="路由" />
+		<el-table-column prop="parentId" label="所属上级" />
         <el-table-column label="操作" align="right" width="230">
             <template #default="scope">
                 <el-button type="danger" :icon="Delete" @click="remove(scope.row)">删除</el-button>

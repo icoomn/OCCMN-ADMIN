@@ -23,18 +23,13 @@
     
     <!-- 列表 -->
     <el-table :data="list" stripe>
-        <el-table-column type="index" label="#" width="200" />
-		<el-table-column prop="createTime" label="打赏时间">
-            <template #default="scope">
-                {{ dateFormat(scope.row.createTime) }}
-            </template>
-        </el-table-column>
-        <el-table-column prop="amount" label="打赏金额" align="center">
+        <el-table-column type="index" label="#" width="100" />
+		<el-table-column prop="name" label="角色名称" width="200"></el-table-column>
+        <el-table-column label="访问权限">
 			<template #default="scope">
-                <span class="money">￥{{ scope.row.amount.toFixed(2) }}</span>
-            </template>
+			{{ scope.row.permissions.map((x:any) => x.name).join(' / ') }}
+			</template>
 		</el-table-column>
-        <el-table-column prop="payMethod" label="支付方式" align="center" />
         <el-table-column label="操作" align="right" width="230">
             <template #default="scope">
                 <el-button type="danger" :icon="Delete" @click="remove(scope.row)">删除</el-button>
@@ -63,7 +58,7 @@
                 <el-input v-model="role.name" />
             </el-form-item>
             <el-form-item label="权限">
-				<el-select v-model="role.permissions" value-key="id" multiple style="width: 100%">
+				<el-select v-model="role.permissionList" value-key="id" multiple style="width: 100%">
 					<el-option v-for="item in permissions" :key="item.id" :label="item.name" :value="item"></el-option>
 				</el-select>
             </el-form-item>
