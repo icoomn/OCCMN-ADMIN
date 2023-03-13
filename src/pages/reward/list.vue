@@ -1,6 +1,6 @@
 <template>
     <!-- 搜索 -->
-    <div class="search">
+    <!-- <div class="search">
         <div class="search__left">
             <div class="search__left-item">
                 <el-input v-model="params.keyWord" @change="search" clearable placeholder="输入名称搜索">
@@ -19,7 +19,7 @@
         <div class="search__right">
             <el-button type="primary" :icon="CirclePlusFilled" @click="add('分类')">新增</el-button>
         </div>
-    </div>
+    </div> -->
     
     <!-- 列表 -->
     <el-table :data="list" stripe>
@@ -86,13 +86,13 @@
     import useModify from '@/hooks/useModify'
 
     // 列表
-    const params = reactive({ keyWord: '', status: '' })
+    // const params = reactive({ keyWord: '', status: '' })
 	const {
         list,
         paging,
         getList,
         search
-    } = useListPage<IReward>($apiReward.list, params)
+    } = useListPage<IReward>($apiReward.list, {})
     getList()
 	
     // 删除

@@ -25,7 +25,11 @@
             </template>
 		</el-table-column>
         <el-table-column prop="path" label="路由" />
-		<el-table-column prop="parentId" label="所属上级" />
+		<el-table-column prop="parentId" label="所属上级">
+			<template #default="scope">
+                {{ scope.row.parentId === '00000000-0000-0000-0000-000000000000' ? '--' : '--' }}
+            </template>
+		</el-table-column>
         <el-table-column label="操作" align="right" width="230">
             <template #default="scope">
                 <el-button type="danger" :icon="Delete" @click="remove(scope.row)">删除</el-button>

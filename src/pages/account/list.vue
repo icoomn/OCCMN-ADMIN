@@ -25,6 +25,11 @@
     <el-table :data="list" stripe>
         <el-table-column type="index" label="#" />
         <el-table-column prop="name" label="姓名" />
+		<el-table-column prop="roleId" label="角色">
+			<template #default="scope">
+				{{ roleList.find(x => x.id === scope.row.roleId)?.name }}
+			</template>
+		</el-table-column>
         <el-table-column prop="password" label="密码" />
         <el-table-column prop="createTime" label="创建时间">
             <template #default="scope">
@@ -73,6 +78,11 @@
             <el-form-item label="密码">
                 <el-input v-model="account.password" type="password" :disabled="!!account.id" />
             </el-form-item>
+			<el-form-item label="角色">
+				<el-select v-model="account.roleId" style="width: 100%;">
+					<el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id!"></el-option>
+				</el-select>
+            </el-form-item>
         </el-form>
         <template #footer>
             <span class="dialog-footer">
@@ -84,14 +94,16 @@
 </template>
 
 <script lang="ts" setup>
-    import { reactive } from 'vue'
+    import { reactive, ref } from 'vue'
     import { IAccount, initAccount } from '../../models/IAccount'
+	import { IRole } from '../../models/IRole'
     import { Search, CirclePlusFilled, Delete, Edit } from '@element-plus/icons-vue'
     import { dateFormat } from '@/utils/dateFormat'
     import useConfirm from '../../hooks/useConfirm'
     import useListPage from '@/hooks/useListPage'
     import useModify from '@/hooks/useModify'
     import $apiAccount from '@/apis/account'
+	import $apiRole from '@/apis/role'
 
     // 列表
     const params = reactive({ keyWord: '', status: '' })
@@ -130,4 +142,12 @@
         dialogVisible.value = false
         getList()
     }
+
+	// 角色列表
+	const roleList = ref<IRole[]>([])
+	const getRoleList = async () => {
+		const result = await $apiRole.list({})
+		roleList.value = result.list
+	}
+	getRoleList()
 </script>
