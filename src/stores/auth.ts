@@ -5,4 +5,8 @@ import { ref } from 'vue'
 export default defineStore('auth', () => {
 	const permissions = ref<IPermission[]>([])
 	return { permissions }
+}, {
+	persist: {
+		enabled: true
+	}
 })

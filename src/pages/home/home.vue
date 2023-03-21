@@ -111,6 +111,9 @@
     const route = useRoute()
     const router = useRouter()
 
+	// 根据权限动态渲染菜单
+	// const 
+
     // 根据路由选中菜单
     const menuDefaultActive = ref('/dashboard')
     watch(() => route.path, (newValue) => { menuDefaultActive.value = newValue }, { immediate: true })

@@ -41,7 +41,9 @@
     import type { FormInstance, FormRules } from 'element-plus'
     import router from '@/routers/index'
     import $apiAuth from '@/apis/auth'
+	import useStore from '@/stores/index'
 
+	const useAuthStore = useStore().useAuthStore
     const login = reactive({
         name: '鄢云峰',
         password: '123123',
@@ -71,12 +73,13 @@
         if (!formEl) return
         await formEl.validate(async (valid, fields) => {
             if (valid) {
-                const token = await $apiAuth.login(login.name, login.password)
+                const result = await $apiAuth.login(login.name, login.password)
+				useAuthStore.permissions = result.permissions
                 const cache = {
                     name: login.isRemember ? login.name : '',
                     password: login.isRemember ? login.password : '',
                     isRemember: login.isRemember,
-                    token
+                    token: result.token
                 }
                 localStorage.setItem('loginForm', JSON.stringify(cache))
                 router.replace('/dashboard')
