@@ -44,11 +44,11 @@
                 text-color="#fff"
                 router
             >
-                <el-menu-item index="/dashboard">
+                <el-menu-item v-for="item in menus" :key="item.id!" :index="item.path!">
                     <el-icon><DataLine /></el-icon>
-                    <span>数据看板</span>
+                    <span>{{item.name}}</span>
                 </el-menu-item>
-				<el-menu-item index="/role/list">
+				<!-- <el-menu-item index="/role/list">
                     <el-icon><Medal /></el-icon>
                     <span>角色管理</span>
                 </el-menu-item>
@@ -75,7 +75,7 @@
                 <el-menu-item index="/category/list">
                     <el-icon><Operation /></el-icon>
                     <span>分类管理</span>
-                </el-menu-item>
+                </el-menu-item> -->
             </el-menu>
             <el-main style="height: calc(100vh - 60px);"><router-view v-if="refresh"></router-view></el-main>
         </el-container>
@@ -107,12 +107,14 @@
     import { useRoute, useRouter } from 'vue-router'
     import { reactive, ref, watch } from 'vue'
     import { FormRules, FormInstance } from 'element-plus'
+	import useStore from '@/stores/index'
 
+	const useAuthStore = useStore().useAuthStore
     const route = useRoute()
     const router = useRouter()
 
 	// 根据权限动态渲染菜单
-	// const 
+	const menus = useAuthStore.permissions 
 
     // 根据路由选中菜单
     const menuDefaultActive = ref('/dashboard')

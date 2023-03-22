@@ -75,6 +75,9 @@
             if (valid) {
                 const result = await $apiAuth.login(login.name, login.password)
 				useAuthStore.permissions = result.permissions
+
+				// router.addRoute()
+
                 const cache = {
                     name: login.isRemember ? login.name : '',
                     password: login.isRemember ? login.password : '',
